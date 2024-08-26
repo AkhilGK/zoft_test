@@ -18,7 +18,7 @@ class AuthRepo {
 
         return response.data['data']['accessToken'];
       }
-      return response.statusCode.toString();
+      return "Error ${response.statusCode.toString()}";
     } catch (e) {
       return "Error ${e.toString()}";
     }

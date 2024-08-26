@@ -16,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController passwordController = TextEditingController(text: "");
   bool isLoading = false;
+  String errorMessage = "";
 
   @override
   Widget build(BuildContext context) {
@@ -79,27 +80,40 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 35,
                   ),
+                  Text(
+                    errorMessage,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   isLoading
-                      ? const CircularProgressIndicator()
+                      ? const Center(child: CircularProgressIndicator())
                       : ElevatedButton(
                           onPressed: () async {
                             if (loginKey.currentState!.validate()) {
                               setState(() {
                                 isLoading = true;
+                                errorMessage = '';
                               });
                               print("login presed");
                               final res = await AuthRepo().userLogin(
-                                  emailController.text.trim(),
-                                  passwordController.text.trim());
+                                emailController.text.trim(),
+                                passwordController.text.trim(),
+                              );
+
                               if (res.contains("Error")) {
                                 setState(() {
+                                  errorMessage =
+                                      "Email and password not matching!";
                                   isLoading = false;
                                 });
                               } else {
                                 print("token printing $res");
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      MyHomePage(title: "title", token: res),
+                                  builder: (context) => const MyHomePage(
+                                    title: "Home Page",
+                                  ),
                                 ));
                                 setState(() {
                                   isLoading = false;
@@ -108,7 +122,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               print(res);
                             }
                           },
-                          child: const Text("Log in"))
+                          child: const Text("Log in")),
+                  const SizedBox(
+                    height: 10,
+                  ),
                 ],
               ),
             )));
