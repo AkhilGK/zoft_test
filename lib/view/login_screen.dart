@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController(text: "");
   bool isLoading = false;
   String errorMessage = "";
+  bool isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: emailController,
                       decoration: InputDecoration(
                           labelText: "Email",
-                          //prefixIcon: Icon(myIcon, color: prefixIconColor),
                           border: const OutlineInputBorder(),
                           focusedBorder: OutlineInputBorder(
                             borderSide:
@@ -61,10 +61,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   TextFormField(
                       controller: passwordController,
+                      obscureText: isVisible,
                       decoration: InputDecoration(
                           labelText: "Password",
-                          //prefixIcon: Icon(myIcon, color: prefixIconColor),
                           border: const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  isVisible = !isVisible;
+                                });
+                              },
+                              icon: const Icon(Icons.remove_red_eye)),
                           focusedBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: Colors.deepPurple.shade300),
@@ -96,7 +103,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 isLoading = true;
                                 errorMessage = '';
                               });
-                              print("login presed");
                               final res = await AuthRepo().userLogin(
                                 emailController.text.trim(),
                                 passwordController.text.trim(),
@@ -109,8 +115,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   isLoading = false;
                                 });
                               } else {
-                                print("token printing $res");
-                                Navigator.of(context).push(MaterialPageRoute(
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
                                   builder: (context) => const MyHomePage(
                                     title: "Home Page",
                                   ),
@@ -119,7 +125,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   isLoading = false;
                                 });
                               }
-                              print(res);
                             }
                           },
                           child: const Text("Log in")),

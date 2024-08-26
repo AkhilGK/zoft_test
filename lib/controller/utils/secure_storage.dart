@@ -10,4 +10,8 @@ class SecureStorageRepository {
   Future<String?> getValue(String key) async {
     return await _storage.read(key: key);
   }
+
+  Future deleteVal(String key) async {
+    return await _storage.delete(key: key);
+  }
 }

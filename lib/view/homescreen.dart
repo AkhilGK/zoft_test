@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:zoft_care/controller/repo/auth_repo.dart';
 import 'package:zoft_care/controller/repo/posts_repo.dart';
 import 'package:zoft_care/view/error_widget.dart';
+import 'package:zoft_care/view/login_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
@@ -22,7 +24,11 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.delete))],
+        actions: [
+          IconButton(
+              onPressed: () => showAlertDialog(context),
+              icon: const Icon(Icons.logout))
+        ],
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -81,6 +87,31 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  void showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Log out'),
+          content: const Text('This is the content of the alert dialog.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Log Out'),
+              onPressed: () {
+                AuthRepo().logout();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                    (route) => false);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

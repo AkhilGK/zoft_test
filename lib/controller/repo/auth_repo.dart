@@ -23,4 +23,8 @@ class AuthRepo {
       return "Error ${e.toString()}";
     }
   }
+
+  Future logout() async {
+    await SecureStorageRepository().deleteVal('token');
+  }
 }
