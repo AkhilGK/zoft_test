@@ -91,15 +91,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               final res = await AuthRepo().userLogin(
                                   emailController.text.trim(),
                                   passwordController.text.trim());
-                              if (res == 'success') {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MyHomePage(title: "title"),
-                                ));
+                              if (res.contains("Error")) {
                                 setState(() {
                                   isLoading = false;
                                 });
                               } else {
+                                print("token printing $res");
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      MyHomePage(title: "title", token: res),
+                                ));
                                 setState(() {
                                   isLoading = false;
                                 });

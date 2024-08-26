@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:zoft_care/controller/utils/secure_storage.dart';
 
 class AuthRepo {
   Dio client = Dio();
+  final storage = const FlutterSecureStorage();
+
   Future<String> userLogin(String email, String password) async {
     var data = {"email": email, "password": password};
     try {
@@ -9,11 +13,14 @@ class AuthRepo {
           await client.post("https://mock-api.zoft.care/login", data: data);
       if (response.statusCode == 200 && response.data['status'] == true) {
         print(response.data);
-        return "success";
+        await SecureStorageRepository()
+            .storeValue("token", response.data['data']['accessToken']);
+
+        return response.data['data']['accessToken'];
       }
       return response.statusCode.toString();
     } catch (e) {
-      return e.toString();
+      return "Error ${e.toString()}";
     }
   }
 }
